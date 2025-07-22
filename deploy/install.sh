@@ -15,13 +15,20 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Get Git repository URL from user
+read -p "Enter your Git repository URL: " GIT_REPO_URL
+if [ -z "$GIT_REPO_URL" ]; then
+    echo "Git repository URL is required"
+    exit 1
+fi
+
 # Update system packages
 echo "Updating system packages..."
 apt update && apt upgrade -y
 
 # Install required packages
 echo "Installing required packages..."
-apt install -y curl wget gnupg2 software-properties-common apt-transport-https ca-certificates
+apt install -y curl wget gnupg2 software-properties-common apt-transport-https ca-certificates git
 
 # Install Node.js 18.x
 echo "Installing Node.js..."
@@ -31,6 +38,10 @@ apt install -y nodejs
 # Install PostgreSQL
 echo "Installing PostgreSQL..."
 apt install -y postgresql postgresql-contrib
+
+# Start and enable PostgreSQL
+systemctl start postgresql
+systemctl enable postgresql
 
 # Install PM2 for process management
 echo "Installing PM2..."
@@ -49,6 +60,11 @@ usermod -aG sudo procureflow
 echo "Setting up application directory..."
 mkdir -p /opt/procureflow
 chown procureflow:procureflow /opt/procureflow
+
+# Clone repository as procureflow user
+echo "Cloning repository..."
+sudo -u procureflow git clone "$GIT_REPO_URL" /opt/procureflow
+cd /opt/procureflow
 
 # Setup PostgreSQL
 echo "Setting up PostgreSQL..."
@@ -99,6 +115,21 @@ chmod 600 /opt/procureflow/.env
 # Create uploads directory
 mkdir -p /opt/procureflow/uploads
 chown procureflow:procureflow /opt/procureflow/uploads
+
+# Install dependencies and build
+echo "Installing dependencies..."
+sudo -u procureflow npm install
+
+echo "Building application..."
+sudo -u procureflow npm run build
+
+# Setup database schema
+echo "Setting up database..."
+if [ -f "/opt/procureflow/supabase/migrations/20250722014920_silver_bonus.sql" ]; then
+    sudo -u procureflow psql -d procurement_db -f /opt/procureflow/supabase/migrations/20250722014920_silver_bonus.sql
+else
+    echo "Warning: Database schema file not found. Please run database setup manually."
+fi
 
 # Configure Nginx
 echo "Configuring Nginx..."
@@ -163,20 +194,31 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-# Enable services
+# Enable and start services
+systemctl daemon-reload
 systemctl enable postgresql
 systemctl enable nginx
 systemctl enable procureflow
 
+# Start services
+systemctl start postgresql
+systemctl start nginx
+systemctl start procureflow
+
+# Wait a moment and check status
+sleep 5
+
 echo ""
 echo "=== Installation Complete ==="
 echo ""
-echo "Next steps:"
-echo "1. Copy your application files to /opt/procureflow/"
-echo "2. Run the database setup: sudo -u procureflow psql -d procurement_db -f /opt/procureflow/database/schema.sql"
-echo "3. Install dependencies: cd /opt/procureflow && sudo -u procureflow npm install"
-echo "4. Build the application: sudo -u procureflow npm run build"
-echo "5. Start services: systemctl start procureflow nginx"
+
+# Check service status
+if systemctl is-active --quiet procureflow; then
+    echo "✅ Application is running successfully!"
+else
+    echo "⚠️  Application may have issues. Check logs with: journalctl -u procureflow -f"
+fi
+
 echo ""
 echo "Database credentials:"
 echo "  Username: procureflow"
@@ -187,9 +229,16 @@ echo "Default admin login:"
 echo "  Email: admin@company.com"
 echo "  Password: admin123"
 echo ""
-echo "Server will be available at: http://$(hostname -I | awk '{print $1}')"
+echo "Server is available at: http://$(hostname -I | awk '{print $1}')"
 echo ""
-echo "Remember to:"
-echo "- Update email settings in /opt/procureflow/.env"
-echo "- Change the default admin password after first login"
-echo "- Configure SSL certificate for production use"
+echo "Important next steps:"
+echo "1. Update email settings in /opt/procureflow/.env"
+echo "2. Change the default admin password after first login"
+echo "3. Configure SSL certificate for production use"
+echo "4. Test the application functionality"
+echo ""
+echo "Useful commands:"
+echo "  - Check application status: systemctl status procureflow"
+echo "  - View application logs: journalctl -u procureflow -f"
+echo "  - Restart application: systemctl restart procureflow"
+echo "  - Update from Git: cd /opt/procureflow && sudo -u procureflow git pull && sudo -u procureflow npm install && sudo -u procureflow npm run build && systemctl restart procureflow"

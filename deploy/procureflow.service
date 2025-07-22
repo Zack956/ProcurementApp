@@ -1,0 +1,40 @@
+[Unit]
+Description=Purchase Requisition Management System
+Documentation=https://github.com/your-username/your-repo
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=procureflow
+Group=procureflow
+WorkingDirectory=/opt/procureflow
+Environment=NODE_ENV=production
+EnvironmentFile=/opt/procureflow/.env
+ExecStart=/usr/bin/node server/index.js
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGINT
+TimeoutStopSec=5
+Restart=always
+RestartSec=10
+
+# Security settings
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/procureflow/uploads
+ReadWritePaths=/opt/procureflow/logs
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=procureflow
+
+[Install]
+WantedBy=multi-user.target
