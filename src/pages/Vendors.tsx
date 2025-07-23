@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Search, Filter, Plus, Star, MapPin, Phone, Mail } from 'lucide-react';
+import { Users, Search, Filter, Plus, Star, MapPin, Phone, Mail, Download } from 'lucide-react';
 import { formatMYR } from '../utils/currency';
 
 export default function Vendors() {
