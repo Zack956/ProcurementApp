@@ -18,23 +18,37 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>({
-    id: '1',
-    name: 'John Doe',
-    email: 'john.doe@company.com',
-    role: 'Purchase Manager',
-    department: 'Administration'
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   const login = async (email: string, password: string) => {
-    // Simulate login
-    setUser({
-      id: '1',
-      name: 'John Doe',
-      email: email,
-      role: 'Purchase Manager',
-      department: 'Administration'
-    });
+    // Simulate login with different user types
+    if (email === 'admin@company.com' && password === 'admin123') {
+      setUser({
+        id: '1',
+        name: 'System Administrator',
+        email: email,
+        role: 'Admin',
+        department: 'Administration'
+      });
+    } else if (email === 'manager@company.com' && password === 'manager123') {
+      setUser({
+        id: '2',
+        name: 'Department Manager',
+        email: email,
+        role: 'Manager',
+        department: 'Operations'
+      });
+    } else if (email === 'employee@company.com' && password === 'employee123') {
+      setUser({
+        id: '3',
+        name: 'John Employee',
+        email: email,
+        role: 'Employee',
+        department: 'IT'
+      });
+    } else {
+      throw new Error('Invalid credentials');
+    }
   };
 
   const logout = () => {

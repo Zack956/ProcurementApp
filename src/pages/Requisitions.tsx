@@ -111,7 +111,7 @@ export default function Requisitions() {
             </button>
             <button className="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
               <Download className="w-4 h-4 mr-2" />
-              Export
+              Export PDF
             </button>
           </div>
         </div>
@@ -172,12 +172,23 @@ export default function Requisitions() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center space-x-2">
-                      <button className="text-blue-600 hover:text-blue-900 p-1 rounded">
+                      <button 
+                        onClick={() => {
+                          const { exportRequisitionToPDF } = require('../utils/pdfExport');
+                          exportRequisitionToPDF(requisition);
+                        }}
+                        className="text-blue-600 hover:text-blue-900 p-1 rounded"
+                        title="Export to PDF"
+                      >
                         <Eye className="w-4 h-4" />
                       </button>
-                      <button className="text-gray-600 hover:text-gray-900 p-1 rounded">
+                      <Link 
+                        to={`/requisitions/edit/${requisition.id}`}
+                        className="text-gray-600 hover:text-gray-900 p-1 rounded"
+                        title="Edit"
+                      >
                         <Edit className="w-4 h-4" />
-                      </button>
+                      </Link>
                       <button className="text-red-600 hover:text-red-900 p-1 rounded">
                         <Trash2 className="w-4 h-4" />
                       </button>

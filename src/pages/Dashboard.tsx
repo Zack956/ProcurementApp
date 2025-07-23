@@ -63,9 +63,20 @@ export default function Dashboard() {
         </div>
         <div className="flex space-x-3">
           <button className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
-            Export Report
+            Export Dashboard
           </button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+          <button 
+            onClick={() => {
+              const { exportDashboardToPDF } = require('../utils/pdfExport');
+              exportDashboardToPDF({
+                totalRequisitions: '1,247',
+                pendingApprovals: '23',
+                activeVendors: '156',
+                budgetUtilized: '68%'
+              });
+            }}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+          >
             Generate Report
           </button>
         </div>

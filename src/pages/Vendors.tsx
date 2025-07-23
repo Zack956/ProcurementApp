@@ -88,7 +88,9 @@ export default function Vendors() {
         </div>
         <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
           <Plus className="w-4 h-4 mr-2" />
-          Add Vendor
+          <Link to="/vendors/create" className="flex items-center">
+            Add Vendor
+          </Link>
         </button>
       </div>
 
@@ -168,6 +170,16 @@ export default function Vendors() {
               <Filter className="w-4 h-4 mr-2" />
               More Filters
             </button>
+            <button 
+              onClick={() => {
+                const { exportVendorsToPDF } = require('../utils/pdfExport');
+                exportVendorsToPDF(vendors);
+              }}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export PDF
+            </button>
           </div>
         </div>
       </div>
@@ -229,9 +241,12 @@ export default function Vendors() {
 
             <div className="border-t pt-4 mt-4">
               <div className="flex space-x-2">
-                <button className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                <Link 
+                  to={`/vendors/edit/${vendor.id}`}
+                  className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center"
+                >
                   View Details
-                </button>
+                </Link>
                 <button className="px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors duration-200">
                   Edit
                 </button>

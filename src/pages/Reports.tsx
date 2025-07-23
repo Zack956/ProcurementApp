@@ -46,10 +46,13 @@ export default function Reports() {
             <Download className="w-4 h-4 mr-2" />
             Export PDF
           </button>
-          <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+          <Link 
+            to="/reports/custom"
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+          >
             <BarChart3 className="w-4 h-4 mr-2" />
             Custom Report
-          </button>
+          </Link>
         </div>
       </div>
 

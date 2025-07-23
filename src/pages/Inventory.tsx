@@ -84,7 +84,9 @@ export default function Inventory() {
         </div>
         <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
           <Plus className="w-4 h-4 mr-2" />
-          Add Item
+          <Link to="/inventory/create" className="flex items-center">
+            Add Item
+          </Link>
         </button>
       </div>
 
@@ -159,6 +161,16 @@ export default function Inventory() {
               <Filter className="w-4 h-4 mr-2" />
               More Filters
             </button>
+            <button 
+              onClick={() => {
+                const { exportInventoryToPDF } = require('../utils/pdfExport');
+                exportInventoryToPDF(inventory);
+              }}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export PDF
+            </button>
           </div>
         </div>
       </div>
@@ -225,12 +237,16 @@ export default function Inventory() {
                     {item.lastUpdated}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900 mr-3">
+                    <button className="text-blue-600 hover:text-blue-900 mr-3" title="Update Stock">
                       Update Stock
                     </button>
-                    <button className="text-gray-600 hover:text-gray-900">
+                    <Link 
+                      to={`/inventory/edit/${item.id}`}
+                      className="text-gray-600 hover:text-gray-900"
+                      title="Edit Item"
+                    >
                       Edit
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}
