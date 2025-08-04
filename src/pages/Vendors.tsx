@@ -32,52 +32,6 @@ export default function Vendors() {
       location: 'San Francisco, CA',
       rating: 4.6,
       totalOrders: 89,
-      totalValue: 125600,
-      status: 'active',
-      paymentTerms: '15 days',
-      lastOrder: '2024-01-08'
-    },
-    {
-      id: 'VEN-003',
-      name: 'Industrial Supplies Co',
-      category: 'Industrial',
-      contact: 'Mike Wilson',
-      email: 'mike@industrial.com',
-      phone: '+1 (555) 456-7890',
-      location: 'Chicago, IL',
-      rating: 4.2,
-      totalOrders: 67,
-      totalValue: 78900,
-      status: 'inactive',
-      paymentTerms: '45 days',
-      lastOrder: '2023-12-15'
-    }
-  ];
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'active':
-        return <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Active</span>;
-      case 'inactive':
-        return <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Inactive</span>;
-      case 'pending':
-        return <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">Pending</span>;
-      default:
-        return <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Unknown</span>;
-    }
-  };
-
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-      />
-    ));
-  };
-
-  return (
-    <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -86,10 +40,6 @@ export default function Vendors() {
             Manage your supplier relationships and performance
           </p>
         </div>
-        <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-          <Plus className="w-4 h-4 mr-2" />
-          <Link to="/vendors/create" className="flex items-center">
-            Add Vendor
           </Link>
         </button>
       </div>
@@ -140,6 +90,52 @@ export default function Vendors() {
         </div>
       </div>
 
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Vendors</p>
+              <p className="text-2xl font-bold text-gray-900">156</p>
+            </div>
+            <Users className="w-8 h-8 text-blue-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Active Vendors</p>
+              <p className="text-2xl font-bold text-green-600">142</p>
+            </div>
+            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+              <Users className="w-5 h-5 text-green-600" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Avg Rating</p>
+              <p className="text-2xl font-bold text-gray-900">4.6</p>
+            </div>
+            <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <Star className="w-5 h-5 text-yellow-600" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Spend</p>
+              <p className="text-2xl font-bold text-gray-900">{formatMYR(1200000)}</p>
+            </div>
+            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+              <span className="text-purple-600 font-bold">RM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="flex flex-col sm:flex-row gap-4">
@@ -172,9 +168,8 @@ export default function Vendors() {
             </button>
             <button 
               onClick={() => {
-                import('../utils/pdfExport').then(({ exportVendorsToPDF }) => {
+                const { exportVendorsToPDF } = require('../utils/pdfExport');
                 exportVendorsToPDF(vendors);
-                });
               }}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
             >
