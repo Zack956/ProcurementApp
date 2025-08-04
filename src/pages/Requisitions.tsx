@@ -174,8 +174,9 @@ export default function Requisitions() {
                     <div className="flex items-center space-x-2">
                       <button 
                         onClick={() => {
-                          const { exportRequisitionToPDF } = require('../utils/pdfExport');
+                          import('../utils/pdfExport').then(({ exportRequisitionToPDF }) => {
                           exportRequisitionToPDF(requisition);
+                          });
                         }}
                         className="text-blue-600 hover:text-blue-900 p-1 rounded"
                         title="Export to PDF"

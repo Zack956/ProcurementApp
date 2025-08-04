@@ -35,46 +35,6 @@ export default function Inventory() {
       name: 'Office Chair',
       category: 'Furniture',
       currentStock: 0,
-      minStock: 5,
-      maxStock: 25,
-      unitPrice: 150.00,
-      lastUpdated: '2024-01-13',
-      status: 'out-of-stock'
-    },
-    {
-      id: 'INV-004',
-      name: 'Printer Ink Cartridge',
-      category: 'Office Supplies',
-      currentStock: 25,
-      minStock: 15,
-      maxStock: 60,
-      unitPrice: 35.00,
-      lastUpdated: '2024-01-12',
-      status: 'in-stock'
-    }
-  ];
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'in-stock':
-        return <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">In Stock</span>;
-      case 'low-stock':
-        return <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">Low Stock</span>;
-      case 'out-of-stock':
-        return <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">Out of Stock</span>;
-      default:
-        return <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">Unknown</span>;
-    }
-  };
-
-  const getStockIcon = (current: number, min: number) => {
-    if (current === 0) return <AlertTriangle className="w-4 h-4 text-red-500" />;
-    if (current < min) return <TrendingDown className="w-4 h-4 text-yellow-500" />;
-    return <TrendingUp className="w-4 h-4 text-green-500" />;
-  };
-
-  return (
-    <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -83,10 +43,6 @@ export default function Inventory() {
             Track and manage your inventory levels
           </p>
         </div>
-        <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-          <Plus className="w-4 h-4 mr-2" />
-          <Link to="/inventory/create" className="flex items-center">
-            Add Item
           </Link>
         </button>
       </div>
@@ -125,6 +81,46 @@ export default function Inventory() {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Value</p>
               <p className="text-2xl font-bold text-gray-900">$45,678</p>
+            </div>
+            <TrendingUp className="w-8 h-8 text-green-600" />
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Items</p>
+              <p className="text-2xl font-bold text-gray-900">324</p>
+            </div>
+            <Package className="w-8 h-8 text-blue-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Low Stock Items</p>
+              <p className="text-2xl font-bold text-yellow-600">12</p>
+            </div>
+            <TrendingDown className="w-8 h-8 text-yellow-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Out of Stock</p>
+              <p className="text-2xl font-bold text-red-600">3</p>
+            </div>
+            <AlertTriangle className="w-8 h-8 text-red-600" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Value</p>
+              <p className="text-2xl font-bold text-gray-900">{formatMYR(45678)}</p>
             </div>
             <TrendingUp className="w-8 h-8 text-green-600" />
           </div>

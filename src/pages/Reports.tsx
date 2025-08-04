@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BarChart3, TrendingUp, Download, Calendar, Filter } from 'lucide-react';
 import { formatMYR } from '../utils/currency';
 

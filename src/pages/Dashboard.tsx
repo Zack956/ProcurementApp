@@ -67,12 +67,13 @@ export default function Dashboard() {
           </button>
           <button 
             onClick={() => {
-              const { exportDashboardToPDF } = require('../utils/pdfExport');
+              import('../utils/pdfExport').then(({ exportDashboardToPDF }) => {
               exportDashboardToPDF({
                 totalRequisitions: '1,247',
                 pendingApprovals: '23',
                 activeVendors: '156',
                 budgetUtilized: '68%'
+              });
               });
             }}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
